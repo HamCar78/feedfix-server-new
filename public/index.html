@@ -388,6 +388,13 @@ flex-direction: column;
 			<button class="search-button" id="searchButton">
 				<img src="Förstoringsglas.svg" alt="search button">
 			</button>
+			<select id="languageSelect" style="margin-left:10px;">
+				<option value="sv">Svenska</option>
+				<option value="en">English</option>
+				<option value="fr">Français</option>
+				<option value="es">Español</option>
+				<option value="zh">中文</option>
+			</select>
 		</div>
 		<div id="profile" class="Profile">
 			<h3 id="profileName">Profile</h3>
@@ -532,11 +539,41 @@ flex-direction: column;
 			});
 		}
 
+		async function translateText(text, targetLang) {
+    if (!text) return "";
+    const res = await fetch("https://libretranslate.de/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            q: text,
+            source: "auto",
+            target: targetLang,
+            format: "text"
+        })
+    });
+    const data = await res.json();
+    return data.translatedText || text;
+}
+
+// Översätt alla recept när språk ändras
+document.getElementById("languageSelect").addEventListener("change", async function () {
+    const lang = this.value;
+    for (let recipe of recipeList) {
+        recipe.translatedName = await translateText(recipe.name, lang);
+        recipe.translatedDescription = await translateText(recipe.description, lang);
+    }
+    updateRecipeListUI();
+});
+
+// Uppdatera UI för att visa översatt text om det finns
 		function showRecipe(recipe) {
 			const uploader = allProfils.find(u => u.id === recipe.uploaderId) || {
 				name: "Unknown",
 				image: "default_profile.svg"
 			};
+
+			const name = recipe.translatedName || recipe.name;
+			const description = recipe.translatedDescription || recipe.description;
 
 			// Create star rating HTML for the card view
 			const fullStars = Math.floor(recipe.rating);
@@ -551,9 +588,9 @@ flex-direction: column;
 			const newRecipeElement = document.createElement("div");
 			newRecipeElement.classList.add("recipe");
 			newRecipeElement.innerHTML = `
-				<img src="${recipe.image}" alt="${recipe.name}" class="recipe-preview" onerror="this.src='FoodPictures/_DefaultImage.png'" />
+				<img src="${recipe.image}" alt="${name}" class="recipe-preview" onerror="this.src='FoodPictures/_DefaultImage.png'" />
 				<div class="recipe-title">
-					<h3>${recipe.name}</h3>
+					<h3>${name}</h3>
 					<div class="uploader-info">
 						<img src="${uploader.image}" alt="${uploader.name}" class="recipe-profile-picture" onerror="this.src='default_profile.svg'" />
 						<p>${uploader.name}</p>
@@ -587,8 +624,7 @@ flex-direction: column;
 				image: "default_profile.svg"
 			};
 
-			// Format the description to preserve line breaks
-			let formattedDescription = recipe.description || 'No instructions provided';
+			let formattedDescription = recipe.translatedDescription || recipe.description || 'No instructions provided';
 			formattedDescription = formattedDescription.replace(/\n/g, '<br>');
 
 			// Create star rating HTML
@@ -602,9 +638,9 @@ flex-direction: column;
 			for (let i = 0; i < emptyStars; i++) starsHtml += '<i class="far fa-star"></i>';
 
 			recipeElement.innerHTML = `
-        <img src="${recipe.image}" alt="${recipe.name}" class="recipe-preview" onerror="this.src='FoodPictures/_DefaultImage.png'" />
+        <img src="${recipe.image}" alt="${recipe.translatedName || recipe.name}" class="recipe-preview" onerror="this.src='FoodPictures/_DefaultImage.png'" />
         <div class="recipe-title">
-            <h3>${recipe.name}</h3>
+            <h3>${recipe.translatedName || recipe.name}</h3>
             <div class="uploader-info">
                 <img src="${uploader.image}" alt="${uploader.name}" class="recipe-profile-picture" onerror="this.src='default_profile.svg'" />
                 <p>${uploader.name}</p>
