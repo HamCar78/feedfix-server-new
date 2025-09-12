@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 
@@ -7,11 +6,16 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json()); // ersätter body-parser
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Print current directory for debugging
-console.log('Current directory:', __dirname);
+// Logga inkommande requests (endast i utveckling)
+if (process.env.NODE_ENV !== 'production') {
+    app.use((req, res, next) => {
+        console.log(`[${req.method}] ${req.url}`);
+        next();
+    });
+}
 
 // Routes
 const recipeRoutes = require('./routes/recipes');
@@ -27,22 +31,27 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Serve Login Page
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-// Error handling
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
+// 404-hantering
+app.use((req, res, next) => {
+    res.status(404).json({ message: 'Endpoint not found' });
 });
 
+// Global error handler
+app.use((err, req, res, next) => {
+    console.error('Server error:', err.stack);
+    res.status(500).json({ message: 'Internal server error' });
+});
+
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`Try these endpoints:`);
-    console.log(`- http://localhost:${PORT}/api/users`);
-    console.log(`- http://localhost:${PORT}/api/recipes`);
-    console.log(`- http://localhost:${PORT}/api/groups`);
+    console.log(`✅ Server running on port ${PORT}`);
+    console.log(`🔗 Endpoints:`);
+    console.log(`- /api/users`);
+    console.log(`- /api/recipes`);
+    console.log(`- /api/groups`);
 });

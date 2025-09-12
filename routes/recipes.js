@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const recipesPath = path.join(__dirname, '../data/recipes.json');
 
-// Helper function to read recipes
+// Läs recept från fil
 async function readRecipes() {
     try {
         const data = await fs.readFile(recipesPath, 'utf8');
@@ -16,53 +16,76 @@ async function readRecipes() {
             await fs.writeFile(recipesPath, '[]');
             return [];
         }
+        console.error('Fel vid läsning av recipes.json:', error);
         throw error;
     }
 }
 
-// GET all recipes
+// Skriv recept till fil
+async function writeRecipes(recipes) {
+    try {
+        await fs.writeFile(recipesPath, JSON.stringify(recipes, null, 2));
+    } catch (error) {
+        console.error('Fel vid skrivning till recipes.json:', error);
+        throw error;
+    }
+}
+
+// Hämta alla recept
 router.get('/', async (req, res) => {
     try {
         const recipes = await readRecipes();
         res.json(recipes);
     } catch (error) {
-        res.status(500).json({ message: 'Error reading recipes' });
+        res.status(500).json({ message: 'Kunde inte hämta recept' });
     }
 });
 
-// GET recipes by search query
+// Sök recept
 router.get('/search/:query', async (req, res) => {
     try {
         const recipes = await readRecipes();
         const query = req.params.query.toLowerCase();
-        
-        const filteredRecipes = recipes.filter(recipe => 
-            recipe.name.toLowerCase().includes(query) || 
-            (recipe.description && recipe.description.toLowerCase().includes(query))
+
+        const filtered = recipes.filter(recipe =>
+            recipe.name?.toLowerCase().includes(query) ||
+            recipe.description?.toLowerCase().includes(query)
         );
-        
-        res.json(filteredRecipes);
+
+        res.json(filtered);
     } catch (error) {
-        res.status(500).json({ message: 'Error searching recipes' });
+        res.status(500).json({ message: 'Kunde inte söka recept' });
     }
 });
 
-// POST - Create new recipe
+// Skapa nytt recept
 router.post('/', async (req, res) => {
     try {
+        const { name, description, ingredients, steps, image } = req.body;
+
+        if (!name || !ingredients || !steps) {
+            return res.status(400).json({ message: 'Namn, ingredienser och steg krävs' });
+        }
+
         const recipes = await readRecipes();
+
         const newRecipe = {
             id: uuidv4(),
-            ...req.body,
+            name: name.trim(),
+            description: description?.trim() || '',
+            ingredients,
+            steps,
+            image: image || 'default_recipe.jpg',
             createdAt: new Date().toISOString()
         };
-        
+
         recipes.push(newRecipe);
-        await fs.writeFile(recipesPath, JSON.stringify(recipes, null, 2));
+        await writeRecipes(recipes);
+
         res.status(201).json(newRecipe);
     } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ message: 'Error saving recipe' });
+        console.error('Fel vid sparande av recept:', error);
+        res.status(500).json({ message: 'Kunde inte spara recept' });
     }
 });
 
