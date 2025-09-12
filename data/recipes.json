@@ -1,61 +1,5 @@
 [
   {
-    "id": "1cff840b-dbc0-4bac-9a02-d2e7fb1adfc3",
-    "name": "Test",
-    "description": "Detta är test",
-    "time": "10",
-    "people": 1,
-    "rating": 1,
-    "image": "https://static.bonniernews.se/ba/16204c4d-c14f-47e5-a371-f7a97c79b541.jpeg?width=1400&format=pjpg&auto=webp",
-    "ingredients": [
-      {
-        "amount": "2",
-        "unit": "dl",
-        "thing": "Äpple"
-      },
-      {
-        "amount": "15",
-        "unit": "g",
-        "thing": "Curry"
-      },
-      {
-        "amount": "1",
-        "unit": "st",
-        "thing": "Bakpulver"
-      }
-    ],
-    "uploaderId": 5,
-    "createdAt": "2025-06-26T19:59:56.806Z"
-  },
-  {
-    "id": "f8aa1172-13e9-4492-bd33-a02b2a16d745",
-    "name": "Test",
-    "description": "Test",
-    "time": "6",
-    "people": 1,
-    "rating": 5,
-    "image": "FoodPictures/_DefaultImage.png",
-    "ingredients": [
-      {
-        "amount": "1",
-        "unit": "1",
-        "thing": "1"
-      },
-      {
-        "amount": "2",
-        "unit": "2",
-        "thing": "2"
-      },
-      {
-        "amount": "3",
-        "unit": "3",
-        "thing": "3"
-      }
-    ],
-    "uploaderId": 0,
-    "createdAt": "2025-06-28T13:27:59.496Z"
-  },
-  {
     "id": "dcedccc3-f8a8-4371-b401-2196bba8044d",
     "name": "Grillad kycklingfilé",
     "description": "Saftig grillad kyckling med smak av citron, rosmarin och lite hetta. En enkel marinad får kycklingen ännu mer smakrik och mör. Lägg på grillen och servera med dina favorittillbehör. Klart!\n\n\nGör så här \n1. Dela kycklingfiléerna på längden.\n\n2. Marinad: Repa rosmarinen och hacka bladen grovt. Riv yttersta skalet av citronerna och pressa ut 1/2 dl juice ur ena (spara 1 citron, se nedan, för 8 port). Blanda alla ingredienserna till marinaden.\n\n3. Lägg kycklingen i dubbla plastpåsar. Häll på marinaden och vänd runt. Låt marinera i kylen minst 2 timmar.\n\n4. Torka av kycklingen lätt. Grilla ca 3 minuter på varje sida, eller tills innertemperaturen på kycklingen är 72°C.\n\n5. Skär citronen i halvor. Grilla citronhalvorna med snittytan ner. Garnera kycklingen med lite rosmarinkvistar och pressa över citronjuice. Krydda ev med salt och peppar.\n\n\nPerfekt på buffébordet eller till en spenatsallad, t ex Spenatsallad med ädelost och aprikoser.",
@@ -258,42 +202,6 @@
     ],
     "uploaderId": 0,
     "createdAt": "2025-06-28T15:40:37.068Z"
-  },
-  {
-    "id": "d60762f2-bcf0-4eac-9e3b-16ddfc925898",
-    "name": "Test3",
-    "description": "Detta är bara test",
-    "time": "2222",
-    "people": 222,
-    "rating": 5,
-    "image": "FoodPictures/_DefaultImage.png",
-    "ingredients": [
-      {
-        "amount": "2",
-        "unit": "2",
-        "thing": "2"
-      }
-    ],
-    "uploaderId": 0,
-    "createdAt": "2025-06-28T18:02:14.369Z"
-  },
-  {
-    "id": "873e9a1b-84a1-4d12-82f2-891b1592e98c",
-    "name": "HEJ",
-    "description": "h1 {\ncolor: red;\ntext-align: center;\nmargin-bottom: 400px;\n}",
-    "time": "10",
-    "people": 2,
-    "rating": 5,
-    "image": "FoodPictures/_DefaultImage.png",
-    "ingredients": [
-      {
-        "amount": "dd",
-        "unit": "dd",
-        "thing": "dd"
-      }
-    ],
-    "uploaderId": 0,
-    "createdAt": "2025-06-28T19:46:21.241Z"
   },
   {
     "id": "164a3d55-3efd-455c-b98c-a48a8ba7a5ef",
