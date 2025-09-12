@@ -76,6 +76,11 @@
 			border-bottom: 1px solid var(--text-color);
 			background-color: var(--background-color);
 		}
+		
+		.header-logo {
+			height: 40px; /* Adjust based on your logo's aspect ratio */
+			width: auto;
+		}
 
 		.side-bar {
 			position: fixed;
@@ -375,8 +380,8 @@ flex-direction: column;
 <body>
 
 	<div class="header">
-		<div class="">
-			<img src="list icon.svg" alt="side bar toggle">
+		<div class="header-logo-container">
+			<img src="FeedFix_Logo.png" alt="FeedFix Logo" class="header-logo">
 		</div>
 		<div class="search-bar">
 			<input type="text" class="search-box" id="searchInput" />
