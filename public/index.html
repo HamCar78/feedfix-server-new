@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>FeedFix</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<style>
+		:root {
+			/* Colors */
+			--border-color: #333;
+			--text-color: #333;
+			--background-color: #FAFCFC;
+			--highlight-color: #1CC4C9;
+			;
+			--background-color--sertch-buton: #d9d9d9;
+
+			/* Sizes */
+			--sidebar-width: 200px;
+			--header-height: 90px;
+			--padding-main: 25px;
+		}
+
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			color: var(--text-color);
+			background-color: var(--background-color);
+		}
+
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6,
+		p {
+			margin: 0px;
+		}
+
+		ul {
+			list-style-type: none;
+			padding-left: 0;
+		}
+
+
+		.darkmode {
+			--border-color: hsla(180, 6%, 50%, 1);
+			--text-color: #fff;
+			--background-color: hsla(180, 6%, 14%, 1);
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		/* Layout */
+
+		.header {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: var(--header-height);
+			z-index: 1001;
+
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			flex-wrap: wrap;
+			flex: 1 0 0;
+			row-gap: 30px;
+
+			padding: 20px var(--padding-main);
+			border-bottom: 1px solid var(--text-color);
+			background-color: var(--background-color);
+		}
+
+		.side-bar {
+			position: fixed;
+			top: var(--header-height);
+			left: 0;
+			width: var(--sidebar-width);
+			height: calc(100vh - var(--header-height));
+			z-index: 1000;
+
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 15px;
+			padding: 15px 0;
+
+			border: 1px solid var(--border-color);
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-left-width: 0px;
+			border-top-width: 0px;
+			background-color: var(--background-color);
+		}
+
+		.main-container {
+			display: flex;
+			align-self: stretch;
+			align-items: flex-start;
+			flex: 1 0 0;
+		}
+
+		#div-recipe-container {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			align-content: flex-start;
+			flex-wrap: wrap;
+			flex: 1 0 0;
+
+			padding: 20px var(--padding-main);
+			row-gap: 30px;
+
+			margin-left: var(--sidebar-width);
+			margin-top: var(--header-height);
+		}
+
+		/* Search */
+
+		.search-bar {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.search-box {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+
+			width: 400px;
+			height: 30px;
+			padding: 5px 10px;
+			border-radius: 10px 0 0 10px;
+			border: 1px solid var(--border-color);
+			border-right: none;
+
+			background-color: var(--background-color);
+			color: var(--text-color);
+		}
+
+		.search-button {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
+
+			width: 50px;
+			height: 30px;
+			border-radius: 0 10px 10px 0;
+			border: 1px solid var(--border-color);
+
+			fill: #000;
+			background: var(--background-color--sertch-buton);
+		}
+
+		.search-button:hover {
+			background: #c8c8c8;
+		}
+
+		.search-button:active {
+			background: #8c8c8c;
+		}
+
+		/* Recipe Cards */
+
+		.recipe {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			gap: 10px;
+
+			width: 300px;
+			height: 300px;
+			border-radius: 10px;
+			border: 1px solid var(--border-color);
+			background-color: var(--background-color);
+
+			transition: all 300ms ease-in-out;
+		}
+
+		.recipe:hover {
+			width: 350px;
+			height: 350px;
+		}
+
+		.recipeClick {
+			width: 100%;
+			height: fit-content;
+			border: 1px solid var(--border-color);
+			border-radius: 10px;
+			overflow: hidden;
+			background-color: var(--background-color);
+		}
+
+		.recipe-preview {
+			width: 100%;
+			height: 150px;
+			object-fit: cover;
+			border-radius: 10px 10px 0 0;
+			transition: all 300ms ease-in-out;
+		}
+
+		/* Change image height when parent is hovered */
+		.recipe:hover .recipe-preview {
+			height: 200px;
+		}
+
+		.recipe-title {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			align-items: flex-start;
+			height: inherit;
+			gap: 0px;
+			padding: 0 10px;
+		}
+
+
+		.uploader-info {
+			display: flex;
+			align-items: center;
+			padding-top: 0px;
+			padding-right: 10px;
+			padding-bottom: 5px;
+			padding-left: 0px;
+			overflow: hidden;
+			gap: 10px;
+		}
+
+		.recipe-profile-picture {
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			object-fit: cover;
+		}
+
+		.recipe-info {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 10px;
+			width: 100%;
+			height: 15px;
+		}
+
+		.recipe-details {
+			background-color: var(--background-color);
+			width: 100%;
+			font-size: 1.5rem;
+		}
+
+		.recipe--hide {
+			display: none;
+		}
+
+		/* Recepe Mode*/
+		.ingredient {
+			border: 1px solid var(--border-color);
+			padding: 12px 15px;
+			margin-bottom: 5px;
+			border-radius: 3px;
+		}
+
+
+
+
+		/* Profile */
+		.Profile {
+			display: flex;
+			flex-direction: row;
+			align-items: flex-start;
+			align-items: center;
+			align-self: stretch;
+			height: 50;
+			gap: 10px;
+
+		}
+
+		.Profile-picture {
+			width: 50px;
+			height: 50px;
+			border-radius: 50%;
+			/* makes it perfectly round */
+			object-fit: cover;
+			/* optional: prevents distortion */
+		}
+
+		.popdown {
+display: flex;
+flex-direction: column;
+
+			background: var(--background-color);
+			border: 1px solid --border-color;
+			border-bottom-left-radius: 10px;
+			border-bottom-right-radius: 10px;
+			padding: 10px;
+			gap: 10px;
+			position: absolute;
+			top: var(--header-height);
+			/* distance from the button */
+			right: 10px;
+			width: 200px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+			z-index: 1000;
+		}
+
+		/* Sidebar */
+		.sidebar--main-item {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			align-items: center;
+			align-self: stretch;
+
+			width: 100%;
+
+			padding: 10px;
+			border-top: 1px solid var(--border-color);
+		}
+
+		/* Groups */
+		.group--sidbar {
+			width: 100%;
+		}
+
+		.recipe-instructions {
+			white-space: pre-line;
+			/* Behåller radbrytningar och vita utrymmen */
+			margin-top: 10px;
+			line-height: 1.6;
+		}
+
+		/* Alternativt om du använder <br>-taggar istället: */
+		.recipe-details p {
+			line-height: 1.6;
+		}
+
+		.recipe-info {
+			display: flex;
+			justify-content: space-between;
+			width: 100%;
+			gap: 10px;
+			margin-top: 10px;
+			color: var(--text-color);
+		}
+
+		.recipe-info p {
+			display: flex;
+			align-items: center;
+			gap: 5px;
+			font-size: 0.9em;
+			margin: 0;
+		}
+
+		.fa-star,
+		.fa-star-half-alt {
+			color:  var(--highlight-color);
+		}
+
+
+		.hidden {
+			display: none;
+		}
+	</style>
+
+
+</head>
+
+<body>
+
+	<div class="header">
+		<div class="">
+			<img src="list icon.svg" alt="side bar toggle">
+		</div>
+		<div class="search-bar">
+			<input type="text" class="search-box" id="searchInput" />
+			<button class="search-button" id="searchButton">
+				<img src="Förstoringsglas.svg" alt="search button">
+			</button>
+		</div>
+		<div id="profile" class="Profile">
+			<h3 id="profileName">Profile</h3>
+			<img src="default_profile.svg" alt="Profile picture" id="profilePicure" class="Profile-picture">
+		</div>
+		<div id="popdown" class="popdown hidden">
+			<button id="logoutButton">Logga ut</button>
+			<button id="darkmodeButton">Darkmode</button>
+		</div>
+	</div>
+
+	<div class="main-container">
+		<div class="side-bar">
+			<button id="home">Home</button>
+			<button onclick="window.location.href='add-recipe.html'" class="add-recipe-button">
+				Add Recipe
+			</button>
+			<div id="group" class="sidebar--main-item">
+				<p>Groups</p>
+			</div>
+		</div>
+		<div id="div-recipe-container"></div>
+	</div>
+
+	<script>
+
+		// Check if user is logged in
+		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		if (!currentUser) {
+			window.location.href = '/login';
+		}
+
+		// Use the logged in user's ID
+		let userId = currentUser.id;
+		let recipeList = [];
+		let allProfils = [];
+		let groups = [];
+
+		const recipeContainer = document.getElementById("div-recipe-container");
+		const searchInput = document.getElementById("searchInput");
+		const searchButton = document.getElementById("searchButton");
+
+		// Fetch data from backend
+		async function fetchData() {
+			try {
+				const [recipesRes, usersRes, groupsRes] = await Promise.all([
+					fetch('/api/recipes'),
+					fetch('/api/users'),
+					fetch(`/api/groups/user/${userId}`)
+				]);
+
+				if (!recipesRes.ok) throw new Error('Failed to fetch recipes');
+				if (!usersRes.ok) throw new Error('Failed to fetch users');
+				if (!groupsRes.ok) throw new Error('Failed to fetch groups');
+
+				recipeList = await recipesRes.json();
+				allProfils = await usersRes.json();
+				groups = await groupsRes.json();
+
+				updateProfile();
+				updateRecipeListUI();
+				updateGroupSidebar();
+			} catch (error) {
+				console.error('Error fetching data:', error);
+				loadFallbackData();
+			}
+		}
+
+		// Fallback data if API fails
+		function loadFallbackData() {
+			recipeList = [
+				{
+					id: 1,
+					name: "Sample Recipe",
+					description: "This is a sample recipe",
+					time: "30 min",
+					ingredients: ["Ingredient 1", "Ingredient 2"],
+					rating: 4.5,
+					people: 4,
+					uploaderId: 0,
+					image: "FoodPictures/_DefaultImage.png"
+				}
+			];
+
+			allProfils = [
+				{
+					id: 0,
+					image: "default_profile.svg",
+					name: "Default User",
+					groups: []
+				}
+			];
+
+			groups = [];
+
+			updateProfile();
+			updateRecipeListUI();
+			updateGroupSidebar();
+		}
+
+		// Initialize the app
+		document.addEventListener('DOMContentLoaded', fetchData);
+
+		function updateProfile() {
+			const user = allProfils.find(u => u.id === userId);
+			if (!user) {
+				console.warn("User not found");
+				return;
+			}
+
+			document.getElementById("profileName").textContent = user.name;
+
+			const imageUrl = user.image;
+			const fallbackUrl = "default_profile.svg";
+
+			if (!imageUrl) {
+				document.getElementById("profilePicure").src = fallbackUrl;
+				return;
+			}
+
+			getValidImageImage(imageUrl, fallbackUrl).then((validUrl) => {
+				document.getElementById("profilePicure").src = validUrl;
+			});
+		}
+
+		// Helper function to validate an image URL and return a good one
+		function getValidImageImage(imageToCheck, fallbackImage) {
+			return new Promise((resolve) => {
+				const img = new Image();
+				img.onload = () => resolve(imageToCheck);   // Valid image
+				img.onerror = () => resolve(fallbackImage); // Fallback if broken
+				img.src = imageToCheck;
+			});
+		}
+
+		//Create recipe div start
+		function updateRecipeListUI() {
+			recipeContainer.innerHTML = "";
+
+			recipeList.forEach((recipe) => {
+				showRecipe(recipe);
+			});
+		}
+
+		function showRecipe(recipe) {
+			const uploader = allProfils.find(u => u.id === recipe.uploaderId) || {
+				name: "Unknown",
+				image: "default_profile.svg"
+			};
+
+			// Create star rating HTML for the card view
+			const fullStars = Math.floor(recipe.rating);
+			const hasHalfStar = recipe.rating % 1 >= 0.5;
+			const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+			let starsHtml = '';
+			for (let i = 0; i < fullStars; i++) starsHtml += '<i class="fas fa-star"></i>';
+			if (hasHalfStar) starsHtml += '<i class="fas fa-star-half-alt"></i>';
+			for (let i = 0; i < emptyStars; i++) starsHtml += '<i class="far fa-star"></i>';
+
+			const newRecipeElement = document.createElement("div");
+			newRecipeElement.classList.add("recipe");
+			newRecipeElement.innerHTML = `
+				<img src="${recipe.image}" alt="${recipe.name}" class="recipe-preview" onerror="this.src='FoodPictures/_DefaultImage.png'" />
+				<div class="recipe-title">
+					<h3>${recipe.name}</h3>
+					<div class="uploader-info">
+						<img src="${uploader.image}" alt="${uploader.name}" class="recipe-profile-picture" onerror="this.src='default_profile.svg'" />
+						<p>${uploader.name}</p>
+					</div>
+					<div class="recipe-info">
+						<p><i class="far fa-clock"></i> ${recipe.time}</p>
+						<p><i class="fas fa-user-friends"></i> ${recipe.people}</p>
+						<p>${starsHtml}</p>
+					</div>
+				</div>
+			`;
+
+			newRecipeElement.addEventListener("click", function () {
+				newRecipeElement.classList.add("recipeClick");
+				newRecipeElement.classList.remove("recipe");
+				recipeClick(recipe, newRecipeElement);
+
+				let recipes = document.getElementsByClassName("recipe");
+				for (let i = 0; i < recipes.length; i++) {
+					recipes[i].classList.add("recipe--hide");
+				}
+			});
+
+			recipeContainer.appendChild(newRecipeElement);
+		}
+
+		//Click recipe start
+		function recipeClick(recipe, recipeElement) {
+			const uploader = allProfils.find(u => u.id === recipe.uploaderId) || {
+				name: "Unknown",
+				image: "default_profile.svg"
+			};
+
+			// Format the description to preserve line breaks
+			let formattedDescription = recipe.description || 'No instructions provided';
+			formattedDescription = formattedDescription.replace(/\n/g, '<br>');
+
+			// Create star rating HTML
+			const fullStars = Math.floor(recipe.rating);
+			const hasHalfStar = recipe.rating % 1 >= 0.5;
+			const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+			let starsHtml = '';
+			for (let i = 0; i < fullStars; i++) starsHtml += '<i class="fas fa-star"></i>';
+			if (hasHalfStar) starsHtml += '<i class="fas fa-star-half-alt"></i>';
+			for (let i = 0; i < emptyStars; i++) starsHtml += '<i class="far fa-star"></i>';
+
+			recipeElement.innerHTML = `
+        <img src="${recipe.image}" alt="${recipe.name}" class="recipe-preview" onerror="this.src='FoodPictures/_DefaultImage.png'" />
+        <div class="recipe-title">
+            <h3>${recipe.name}</h3>
+            <div class="uploader-info">
+                <img src="${uploader.image}" alt="${uploader.name}" class="recipe-profile-picture" onerror="this.src='default_profile.svg'" />
+                <p>${uploader.name}</p>
+            </div>
+            <div class="recipe-info">
+                <p><i class="far fa-clock"></i> ${recipe.time}</p>
+                <p><i class="fas fa-user-friends"></i> ${recipe.people}</p>
+                <p>${starsHtml}</p>
+            </div>
+            <div class="recipe-details">
+                <h4>Ingredients</h4>
+                <ul>
+                    ${recipe.ingredients.map(ing =>
+				typeof ing === 'string'
+					? `<li>${ing}</li>`
+					: `<li class="ingredient">${ing.amount} ${ing.unit} ${ing.thing}</li>`
+			).join('')}
+			<h4>Instructions</h4>
+			<p class="recipe-instructions">${formattedDescription}</p>
+                </ul>
+            </div>
+        </div>
+    `;
+		}
+
+		function RemoveExstraInfo() {
+			let exstraInfo = document.getElementsByClassName("recipe-details");
+
+			while (exstraInfo.length > 0) {
+				exstraInfo[0].remove();
+			}
+
+		}
+
+		//Home button start
+		document.getElementById("home").addEventListener("click", home);
+		function home() {
+			let recipesHidden = document.getElementsByClassName("recipe");
+			let recipeOpen = document.getElementsByClassName("recipeClick");
+
+			for (let i = 0; i < recipesHidden.length; i++) {
+				recipesHidden[i].classList.remove("recipe--hide");
+			}
+
+			if (recipeOpen.length > 0) {
+				recipeOpen[0].classList.add("recipe");
+				recipeOpen[0].classList.remove("recipeClick");
+			}
+
+			RemoveExstraInfo();
+		}
+
+		/* Profile popdown*/
+		document.getElementById('profile').addEventListener('click', function () {
+			document.getElementById('popdown').classList.toggle('hidden');
+		});
+
+		// Search functionality
+		searchButton.addEventListener("click", searchRecipes);
+		searchInput.addEventListener("keypress", function (e) {
+			if (e.key === "Enter") {
+				searchRecipes();
+			}
+		});
+
+		async function searchRecipes() {
+			const query = searchInput.value.trim();
+			if (!query) {
+				fetchData(); // Reload all recipes if search is empty
+				return;
+			}
+
+			try {
+				const response = await fetch(`/api/recipes/search/${encodeURIComponent(query)}`);
+				if (!response.ok) throw new Error('Search failed');
+
+				recipeList = await response.json();
+				updateRecipeListUI();
+			} catch (error) {
+				console.error("Search error:", error);
+				// Fallback to client-side search if API fails
+				recipeList = recipeList.filter(recipe =>
+					recipe.name.toLowerCase().includes(query.toLowerCase()) ||
+					(recipe.description && recipe.description.toLowerCase().includes(query.toLowerCase()))
+				);
+				updateRecipeListUI();
+			}
+		}
+
+		// Groups sidebar
+		function updateGroupSidebar() {
+			const groupContainer = document.getElementById("group");
+			if (!groupContainer) return;
+
+			// Clear existing groups (except the title)
+			while (groupContainer.children.length > 1) {
+				groupContainer.removeChild(groupContainer.lastChild);
+			}
+
+			if (groups.length === 0) {
+				const noGroups = document.createElement("p");
+				noGroups.textContent = "No groups found";
+				noGroups.style.fontSize = "0.8em";
+				noGroups.style.color = "#666";
+				groupContainer.appendChild(noGroups);
+				return;
+			}
+
+			groups.forEach(group => {
+				const groupElement = document.createElement("div");
+				groupElement.style.display = "flex";
+				groupElement.style.alignItems = "center";
+				groupElement.style.gap = "10px";
+				groupElement.style.margin = "5px 0";
+				groupElement.style.cursor = "pointer";
+
+				groupElement.innerHTML = `
+					<img src="${group.image || 'default_profile.svg'}" alt="${group.name}" 
+						style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"
+						onerror="this.src='default_profile.svg'">
+					<span>${group.name}</span>
+				`;
+
+				groupElement.addEventListener("click", () => {
+					// Filter recipes by group members
+					const groupMemberIds = group.users;
+					recipeList = recipeList.filter(recipe =>
+						groupMemberIds.includes(recipe.uploaderId)
+					);
+					updateRecipeListUI();
+				});
+
+				groupContainer.appendChild(groupElement);
+			});
+		}
+
+		//Darkmode toggle
+		// Apply system preference on first load
+		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			document.body.classList.add("darkmode");
+		}
+
+		// Toggle manually with button
+		document.getElementById("darkmodeButton").addEventListener("click", toggleDarkMode);
+
+		function toggleDarkMode() {
+			document.body.classList.toggle("darkmode");
+		}
+
+		// Log out
+		document.getElementById("logoutButton").addEventListener("click", function () {
+			localStorage.removeItem('currentUser'); // Rensa inloggad användare
+			window.location.href = "/login";        // Skicka till inloggningssidan
+		});
+	</script>
+</body>
+
+</html>

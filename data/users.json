@@ -1,0 +1,42 @@
+[
+  {
+    "id": 0,
+    "name": "Hampus Carlberg",
+    "email": "hampuscarlberg@gmail.com",
+    "password": "$2b$10$FJmZATVbE3iHjfD6n/hU6ul2XzjfJr/zR7SC9jS7geFlBLNz10Vb.",
+    "image": "https://media.discordapp.net/attachments/894542549484707850/1242185524408488058/Spinn.gif?ex=6860e02b&is=685f8eab&hm=bcef6b678cdb8e200b9afbd8ed51d4c070d0013ce838df1151ae054ae3ee2181&=",
+    "groups": []
+  },
+  {
+    "id": 1,
+    "name": "Helikopter",
+    "email": "helikopter@mail.com",
+    "password": "$2b$10$2Tll9BNFd52GWya5zJNp1uw1dxKPrVI.kd6r9drMbiZj79pf4EVam",
+    "image": "https://media.discordapp.net/attachments/811772642059091989/870430400466546748/helikoper.gif?ex=6861133b&is=685fc1bb&hm=f23d5f5f688b13ddae3017524b5df26bf2eb5f78d90f8b233758929cdfedc0d2&",
+    "groups": []
+  },
+  {
+    "id": 2,
+    "name": "Kissekatt2005",
+    "email": "rstrangborn@gmail.com",
+    "password": "$2b$10$WP91tXNNeW50xz3dJ1p5/OK7ZXDbVu4I4wm/z7aueZoqWAiXQb2X6",
+    "image": "default_profile.svg",
+    "groups": []
+  },
+  {
+    "id": 3,
+    "name": "Mrs.Fancy",
+    "email": "fansy@gmail.se",
+    "password": "$2b$10$e8NhLUIIhG0DHYGAMTtQJOuttWLKfETX1sIRH7Tp1ZafbF.a2KcMi",
+    "image": "https://media1.tenor.com/m/7xStm7h_r60AAAAd/anime-anime-girl.gif",
+    "groups": []
+  },
+  {
+    "id": 4,
+    "name": "Alenky",
+    "email": "114514@gmail.com",
+    "password": "$2b$10$103nZIoBJsX7wAzDtOxn2.KuDHwO7nzkmrP7sVm/fHOyUjrlMfNOW",
+    "image": "https://shapes.inc/api/public/avatar/togawasakiko-n4a2",
+    "groups": []
+  }
+]

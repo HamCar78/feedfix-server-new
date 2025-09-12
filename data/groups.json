@@ -1,0 +1,14 @@
+[
+    {
+        "id": 0,
+        "users": [0, 3, 4],
+        "image": "",
+        "name": "Family Group"
+    },
+    {
+        "id": 1,
+        "users": [0, 1, 2],
+        "image": "",
+        "name": "Friends Group"
+    }
+]
