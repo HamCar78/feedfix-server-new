@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fetch = require('node-fetch');
 
 const app = express();
 
@@ -33,6 +34,23 @@ app.get('/', (req, res) => {
 
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+// Proxy för översättning
+app.post('/api/translate', async (req, res) => {
+    const { q, source = "auto", target, format = "text" } = req.body;
+    try {
+        const response = await fetch('https://libretranslate.de/translate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ q, source, target, format })
+        });
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        console.error('Translation error:', error);
+        res.status(500).json({ error: 'Translation failed' });
+    }
 });
 
 // 404-hantering
