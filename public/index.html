@@ -791,6 +791,24 @@ document.getElementById("languageSelect").addEventListener("change", async funct
 			document.body.classList.toggle("darkmode");
 		}
 
+		function setLogoByTheme() {
+    const logoImg = document.querySelector('.header-logo');
+    if (document.body.classList.contains('darkmode')) {
+        logoImg.src = 'FeedFix_Logo_Light.png';
+    } else {
+        logoImg.src = 'FeedFix_Logo.png';
+    }
+}
+
+// Kör vid start
+document.addEventListener('DOMContentLoaded', setLogoByTheme);
+
+// Kör vid darkmode-toggle
+function toggleDarkMode() {
+    document.body.classList.toggle("darkmode");
+    setLogoByTheme();
+}
+
 		// Log out
 		document.getElementById("logoutButton").addEventListener("click", function () {
 			localStorage.removeItem('currentUser'); // Rensa inloggad användare

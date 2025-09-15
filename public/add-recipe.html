@@ -622,6 +622,11 @@ flex-direction: column;
                         <button type="button" id="add-ingredient">+ Lägg till ingrediens</button>
                     </div>
                     
+                    <div class="form-group">
+                        <label for="steps">Instruktioner / Steg</label>
+                        <textarea id="steps" name="steps" class="add-recipe--texbox" required></textarea>
+                    </div>
+                    
                     <button type="submit" id="submit-recipe">Spara Recept</button>
                 </form>
                 
@@ -743,7 +748,8 @@ flex-direction: column;
                     rating: parseFloat(document.getElementById('rating').value),
                     image: imageUrl || 'FoodPictures/_DefaultImage.png',
                     ingredients: ingredients,
-                    uploaderId: currentUser.id  // Här använder vi det inloggade användarens ID
+                    steps: document.getElementById('steps').value.trim(), // <-- Lägg till detta!
+                    uploaderId: currentUser.id
                 };
                 
                 try {
