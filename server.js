@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' }); // <-- Nytt
 
 const app = express();
 
@@ -25,6 +27,54 @@ const groupRoutes = require('./routes/groups');
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/groups', groupRoutes);
+
+// --- NYA ROUTES ---
+// Hämta specifik användare
+app.get('/api/users/:id', async (req, res) => {
+  try {
+    // Här skulle du hämta användardata från databasen
+    // Detta är en placeholder
+    res.json({ id: req.params.id, name: "User Name", email: "user@example.com" });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching user' });
+  }
+});
+
+// Uppdatera användare
+app.put('/api/users/:id', upload.single('image'), async (req, res) => {
+  try {
+    // Här skulle du uppdatera användaren i databasen
+    // Detta är en placeholder
+    const updates = {
+      name: req.body.name,
+      email: req.body.email,
+      bio: req.body.bio
+    };
+    
+    if (req.file) {
+      updates.image = `/uploads/${req.file.filename}`;
+    }
+    
+    res.json(updates);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating user' });
+  }
+});
+
+// Ändra lösenord
+app.put('/api/users/:id/password', async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    
+    // Här skulle du validera currentPassword och uppdatera till newPassword
+    // Detta är en placeholder
+    
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error changing password' });
+  }
+});
+// --- SLUT NYA ROUTES ---
 
 // Serve HTML
 app.get('/', (req, res) => {
