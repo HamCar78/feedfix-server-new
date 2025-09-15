@@ -2,17 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const multer = require('multer');
-const { createProxyMiddleware } = require('http-proxy-middleware');
 const upload = multer({ dest: 'uploads/' }); // <-- Nytt
 
 const app = express();
-
-// Proxy API-anrop från /api till din backend på Render
-app.use('/api', createProxyMiddleware({
-  target: 'https://feedfix-server-new.onrender.com',
-  changeOrigin: true,
-  pathRewrite: { '^/api': '/api' }
-}));
 
 // Middleware
 app.use(cors());
