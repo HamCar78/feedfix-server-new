@@ -250,6 +250,8 @@
         // Check if user is logged in
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (!currentUser || !currentUser.id || currentUser.id === 0) {
+            // Visa ett meddelande istället för att redirecta direkt
+            alert('Du är inte inloggad eller sessionen är isolerad. Logga in igen.');
             window.location.href = '/login';
         }
 
