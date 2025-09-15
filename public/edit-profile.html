@@ -249,7 +249,7 @@
     <script>
         // Check if user is logged in
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (!currentUser) {
+        if (!currentUser || !currentUser.id) {
             window.location.href = '/login';
         }
 

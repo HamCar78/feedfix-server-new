@@ -10,6 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json()); // ersätter body-parser
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Logga inkommande requests (endast i utveckling)
 if (process.env.NODE_ENV !== 'production') {
