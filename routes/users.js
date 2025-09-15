@@ -105,4 +105,37 @@ router.post('/signup', async (req, res) => {
     }
 });
 
+// Autentisering middleware (exempel, byt ut mot din riktiga)
+function authMiddleware(req, res, next) {
+    // Här bör du verifiera JWT eller session
+    // Exempel: req.user = { id: '...' }
+    // Om ej autentiserad: return res.status(401).json({ message: 'Ej autentiserad' });
+    next();
+}
+
+// Ändra lösenord
+router.put('/:id/password', authMiddleware, async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        const users = await readUsers();
+        const userIndex = users.findIndex(u => u.id === req.params.id);
+
+        if (userIndex === -1) return res.status(404).json({ message: 'User not found' });
+
+        const user = users[userIndex];
+
+        // Verifiera nuvarande lösenord
+        const isValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isValid) return res.status(401).json({ message: 'Current password is incorrect' });
+
+        // Hasha och spara nytt lösenord
+        users[userIndex].password = await bcrypt.hash(newPassword, 10);
+        await writeUsers(users);
+
+        res.json({ message: 'Password updated successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error changing password' });
+    }
+});
+
 module.exports = router;
