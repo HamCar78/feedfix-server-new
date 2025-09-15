@@ -18,6 +18,17 @@
 			--sidebar-width: 200px;
 			--header-height: 90px;
 			--padding-main: 25px;
+
+            --form-bg: #fff;
+    --form-text: #333;
+    --form-border-color: #333;
+    --success-bg: #d4edda;
+    --success-text: #155724;
+    --error-bg: #f8d7da;
+    --error-text: #721c24;
+    --uploader-bg: #e9f7ef;
+    --back-btn-bg: #6c757d;
+    --back-btn-hover: #5a6268;
 		}
 
         body {
@@ -47,6 +58,16 @@
 			--border-color: hsla(180, 6%, 50%, 1);
 			--text-color: #fff;
 			--background-color: hsla(180, 6%, 14%, 1);
+			--form-bg: #222;
+    --form-text: #fff;
+    --form-border-color: #aaa;
+    --success-bg: #234d2c;
+    --success-text: #c2f0c2;
+    --error-bg: #5a2327;
+    --error-text: #ffd6d6;
+    --uploader-bg: #1a2a24;
+    --back-btn-bg: #444;
+    --back-btn-hover: #222;
 		}
 
 		* {
@@ -382,6 +403,7 @@ flex-direction: column;
             padding: 25px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1.5px solid var(--form-border-color);
         }
         
         .form-group {
@@ -399,7 +421,7 @@ flex-direction: column;
         select {
             background-color: var(--form-bg);
             color: var(--form-text);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--form-border-color);
         }
         
         textarea {
@@ -414,7 +436,9 @@ flex-direction: column;
         }
         
         .ingredient-row input {
-            flex: 1;
+            border: 1px solid var(--form-border-color);
+            background-color: var(--form-bg);
+            color: var(--form-text);
         }
         
         .ingredient-row button {
