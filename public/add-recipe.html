@@ -522,24 +522,24 @@ flex-direction: column;
 </head>
 <body>
 <div class="header">
-		<div class="">
-			<img src="list icon.svg" alt="side bar toggle">
-		</div>
-		<div class="search-bar">
-			<input type="text" class="search-box" id="searchInput" />
-			<button class="search-button" id="searchButton">
-				<img src="Förstoringsglas.svg" alt="search button">
-			</button>
-		</div>
-		<div id="profile" class="Profile">
-			<h3 id="profileName">Profile</h3>
-			<img src="default_profile.svg" alt="Profile picture" id="profilePicure" class="Profile-picture">
-		</div>
-		<div id="popdown" class="popdown hidden">
-			<button id="logoutButton">Logga ut</button>
-			<button id="darkmodeButton">Darkmode</button>
-		</div>
-	</div>
+    <div class="header-logo-container">
+        <img src="FeedFix_Logo.png" alt="FeedFix Logo" class="header-logo" style="height:40px;width:auto;">
+    </div>
+    <div class="search-bar">
+        <input type="text" class="search-box" id="searchInput" />
+        <button class="search-button" id="searchButton">
+            <img src="Förstoringsglas.svg" alt="search button">
+        </button>
+    </div>
+    <div id="profile" class="Profile" style="cursor:pointer;">
+        <h3 id="profileName"></h3>
+        <img src="default_profile.svg" alt="Profile picture" id="profilePicure" class="Profile-picture">
+    </div>
+    <div id="popdown" class="popdown hidden">
+        <button id="logoutButton">Logga ut</button>
+        <button id="darkmodeButton">Darkmode</button>
+    </div>
+</div>
 
 	<div class="main-container">
 		<div class="side-bar">
@@ -806,5 +806,80 @@ flex-direction: column;
             });
         });
     </script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Hämta inloggad användare från localStorage
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    if (!currentUser) {
+        alert('Du måste vara inloggad för att komma åt denna sida!');
+        window.location.href = '/login.html';
+        return;
+    }
+    
+    // Visa användarinformation i sidomenyn
+    document.getElementById('uploader-name').textContent = currentUser.name;
+    document.getElementById('uploader-id').textContent = currentUser.id;
+    
+    // Visa profilbild i sidomenyn och header (med fallback)
+    const uploaderImage = document.getElementById('uploader-image');
+    function setImageWithFallback(src, fallback) {
+        uploaderImage.src = src;
+        uploaderImage.onerror = function() {
+            this.src = fallback;
+            this.onerror = null;
+        };
+    }
+    setImageWithFallback(currentUser.image || 'default_profile.svg', 'default_profile.svg');
+    
+    // Visa profilnamn och bild i header
+    document.getElementById("profileName").textContent = currentUser.name;
+    function setHeaderProfileImage(src, fallback) {
+        const img = document.getElementById("profilePicure");
+        img.src = src;
+        img.onerror = function() {
+            this.src = fallback;
+            this.onerror = null;
+        };
+    }
+    setHeaderProfileImage(currentUser.image || 'default_profile.svg', 'default_profile.svg');
+
+    // Profil popdown
+    document.getElementById('profile').addEventListener('click', function () {
+        document.getElementById('popdown').classList.toggle('hidden');
+    });
+
+    // Logga ut
+    document.getElementById("logoutButton").addEventListener("click", function () {
+        localStorage.removeItem('currentUser');
+        window.location.href = "/login.html";
+    });
+
+    // Darkmode: systempreferens vid start
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add("darkmode");
+    }
+    // Toggle darkmode
+    document.getElementById("darkmodeButton").addEventListener("click", function () {
+        document.body.classList.toggle("darkmode");
+        setLogoByTheme();
+    });
+    // Byt logga vid darkmode
+    function setLogoByTheme() {
+        const logoImg = document.querySelector('.header-logo');
+        if (document.body.classList.contains('darkmode')) {
+            logoImg.src = 'FeedFix_Logo_Light.png';
+        } else {
+            logoImg.src = 'FeedFix_Logo.png';
+        }
+    }
+    setLogoByTheme();
+
+    // Home-knapp går till index.html
+    document.getElementById("home").addEventListener("click", function() {
+        window.location.href = "index.html";
+    });
+});
+</script>
 </body>
 </html>
