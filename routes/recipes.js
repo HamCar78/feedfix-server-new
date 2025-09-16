@@ -93,4 +93,30 @@ router.post('/', async (req, res) => {
     }
 });
 
+// Ta bort ett recept (endast om rätt användare)
+router.delete('/:id', async (req, res) => {
+    try {
+        const recipeId = req.params.id;
+        const { userId } = req.body; // userId skickas från frontend
+
+        const recipes = await readRecipes();
+        const recipe = recipes.find(r => r.id === recipeId);
+
+        if (!recipe) {
+            return res.status(404).json({ message: 'Receptet hittades inte' });
+        }
+
+        if (recipe.uploaderId != userId) {
+            return res.status(403).json({ message: 'Du får bara ta bort dina egna recept' });
+        }
+
+        const updatedRecipes = recipes.filter(r => r.id !== recipeId);
+        await writeRecipes(updatedRecipes);
+
+        res.json({ message: 'Recept borttaget' });
+    } catch (error) {
+        res.status(500).json({ message: 'Kunde inte ta bort recept' });
+    }
+});
+
 module.exports = router;

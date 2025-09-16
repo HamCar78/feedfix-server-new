@@ -569,54 +569,69 @@ document.getElementById("languageSelect").addEventListener("change", async funct
 
 // Uppdatera UI för att visa översatt text om det finns
 		function showRecipe(recipe) {
-			const uploader = allProfils.find(u => u.id === recipe.uploaderId) || {
-				name: "Unknown",
-				image: "default_profile.svg"
-			};
+    const uploader = allProfils.find(u => u.id === recipe.uploaderId) || {
+        name: "Unknown",
+        image: "default_profile.svg"
+    };
 
-			const name = recipe.translatedName || recipe.name;
-			const description = recipe.translatedDescription || recipe.description;
+    const name = recipe.translatedName || recipe.name;
+    const description = recipe.translatedDescription || recipe.description;
 
-			// Create star rating HTML for the card view
-			const fullStars = Math.floor(recipe.rating);
-			const hasHalfStar = recipe.rating % 1 >= 0.5;
-			const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    // Create star rating HTML for the card view
+    const fullStars = Math.floor(recipe.rating);
+    const hasHalfStar = recipe.rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
-			let starsHtml = '';
-			for (let i = 0; i < fullStars; i++) starsHtml += '<i class="fas fa-star"></i>';
-			if (hasHalfStar) starsHtml += '<i class="fas fa-star-half-alt"></i>';
-			for (let i = 0; i < emptyStars; i++) starsHtml += '<i class="far fa-star"></i>';
+    let starsHtml = '';
+    for (let i = 0; i < fullStars; i++) starsHtml += '<i class="fas fa-star"></i>';
+    if (hasHalfStar) starsHtml += '<i class="fas fa-star-half-alt"></i>';
+    for (let i = 0; i < emptyStars; i++) starsHtml += '<i class="far fa-star"></i>';
 
-			const newRecipeElement = document.createElement("div");
-			newRecipeElement.classList.add("recipe");
-			newRecipeElement.innerHTML = `
-				<img src="${recipe.image}" alt="${name}" class="recipe-preview" onerror="this.src='FoodPictures/_DefaultImage.png'" />
-				<div class="recipe-title">
-					<h3>${name}</h3>
-					<div class="uploader-info">
-						<img src="${uploader.image}" alt="${uploader.name}" class="recipe-profile-picture" onerror="this.src='default_profile.svg'" />
-						<p>${uploader.name}</p>
-					</div>
-					<div class="recipe-info">
-						<p><i class="far fa-clock"></i> ${recipe.time}</p>
-						<p><i class="fas fa-user-friends"></i> ${recipe.people}</p>
-						<p>${starsHtml}</p>
-					</div>
-				</div>
-			`;
+    const newRecipeElement = document.createElement("div");
+    newRecipeElement.classList.add("recipe");
+    newRecipeElement.innerHTML = `
+        <img src="${recipe.image}" alt="${name}" class="recipe-preview" onerror="this.src='FoodPictures/_DefaultImage.png'" />
+        <div class="recipe-title">
+            <h3>${name}</h3>
+            <div class="uploader-info">
+                <img src="${uploader.image}" alt="${uploader.name}" class="recipe-profile-picture" onerror="this.src='default_profile.svg'" />
+                <p>${uploader.name}</p>
+            </div>
+            <div class="recipe-info">
+                <p><i class="far fa-clock"></i> ${recipe.time}</p>
+                <p><i class="fas fa-user-friends"></i> ${recipe.people}</p>
+                <p>${starsHtml}</p>
+            </div>
+            ${
+                recipe.uploaderId == userId
+                ? `<button class="delete-recipe-btn" style="margin-top:10px;background:#ff6b6b;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;">Ta bort</button>`
+                : ''
+            }
+        </div>
+    `;
 
-			newRecipeElement.addEventListener("click", function () {
-				newRecipeElement.classList.add("recipeClick");
-				newRecipeElement.classList.remove("recipe");
-				recipeClick(recipe, newRecipeElement);
+    // Ta bort-knapp event
+    if (recipe.uploaderId == userId) {
+        newRecipeElement.querySelector('.delete-recipe-btn').addEventListener('click', async (e) => {
+            e.stopPropagation();
+            if (confirm('Vill du verkligen ta bort detta recept?')) {
+                await deleteRecipe(recipe.id);
+            }
+        });
+    }
 
-				let recipes = document.getElementsByClassName("recipe");
-				for (let i = 0; i < recipes.length; i++) {
-					recipes[i].classList.add("recipe--hide");
-				}
-			});
+    newRecipeElement.addEventListener("click", function () {
+        newRecipeElement.classList.add("recipeClick");
+        newRecipeElement.classList.remove("recipe");
+        recipeClick(recipe, newRecipeElement);
 
-			recipeContainer.appendChild(newRecipeElement);
+        let recipes = document.getElementsByClassName("recipe");
+        for (let i = 0; i < recipes.length; i++) {
+            recipes[i].classList.add("recipe--hide");
+        }
+    });
+
+    recipeContainer.appendChild(newRecipeElement);
 		}
 
 		//Click recipe start
@@ -815,6 +830,26 @@ function toggleDarkMode() {
 			localStorage.removeItem('currentUser'); // Rensa inloggad användare
 			window.location.href = "/login";        // Skicka till inloggningssidan
 		});
+
+async function deleteRecipe(recipeId) {
+    try {
+        const response = await fetch(`/api/recipes/${recipeId}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId })
+        });
+        if (!response.ok) {
+            const data = await response.json();
+            alert(data.message || 'Kunde inte ta bort recept');
+            return;
+        }
+        // Ta bort från listan och uppdatera UI
+        recipeList = recipeList.filter(r => r.id !== recipeId);
+        updateRecipeListUI();
+    } catch (error) {
+        alert('Något gick fel vid borttagning');
+    }
+}
 	</script>
 </body>
 
