@@ -645,7 +645,11 @@ function recipeClick(recipe, recipeElement) {
     let instructions = recipe.steps || recipe.description || 'No instructions provided';
     let formattedInstructions = instructions.replace(/\n/g, '<br>');
 
-    // Resten av koden förblir densamma...
+    // Create star rating HTML
+    const fullStars = Math.floor(recipe.rating);
+    const hasHalfStar = recipe.rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
     let starsHtml = '';
     for (let i = 0; i < fullStars; i++) starsHtml += '<i class="fas fa-star"></i>';
     if (hasHalfStar) starsHtml += '<i class="fas fa-star-half-alt"></i>';
