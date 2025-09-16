@@ -206,6 +206,14 @@
                 errorElement.textContent = error.message;
             }
         });
+
+        const fs = require('fs');
+        const users = JSON.parse(fs.readFileSync('users.json'));
+        const lastId = users.length > 0 ? Math.max(...users.map(u => u.id)) : 0;
+        const newUser = {
+            id: lastId + 1,
+            // ...other user fields...
+        };
     </script>
 </body>
 
