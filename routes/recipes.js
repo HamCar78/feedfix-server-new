@@ -61,7 +61,7 @@ router.get('/search/:query', async (req, res) => {
 // Skapa nytt recept
 router.post('/', async (req, res) => {
     try {
-        const { name, description, ingredients, steps, image } = req.body;
+        const { name, description, ingredients, steps, image, time, people, rating, uploaderId } = req.body;
 
         if (!name || !ingredients || !steps) {
             return res.status(400).json({ message: 'Namn, ingredienser och steg krävs' });
@@ -73,9 +73,13 @@ router.post('/', async (req, res) => {
             id: uuidv4(),
             name: name.trim(),
             description: description?.trim() || '',
+            time: time || '',
+            people: people || 1,
+            rating: rating || 5,
+            image: image || 'default_recipe.jpg',
             ingredients,
             steps,
-            image: image || 'default_recipe.jpg',
+            uploaderId: uploaderId ?? null,
             createdAt: new Date().toISOString()
         };
 
