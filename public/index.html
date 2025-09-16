@@ -635,26 +635,23 @@ document.getElementById("languageSelect").addEventListener("change", async funct
 		}
 
 		//Click recipe start
-		function recipeClick(recipe, recipeElement) {
-			const uploader = allProfils.find(u => u.id === recipe.uploaderId) || {
-				name: "Unknown",
-				image: "default_profile.svg"
-			};
+function recipeClick(recipe, recipeElement) {
+    const uploader = allProfils.find(u => u.id === recipe.uploaderId) || {
+        name: "Unknown",
+        image: "default_profile.svg"
+    };
 
-			let formattedDescription = recipe.translatedDescription || recipe.description || 'No instructions provided';
-			formattedDescription = formattedDescription.replace(/\n/g, '<br>');
+    // Använd steps om det finns, annars description
+    let instructions = recipe.steps || recipe.description || 'No instructions provided';
+    let formattedInstructions = instructions.replace(/\n/g, '<br>');
 
-			// Create star rating HTML
-			const fullStars = Math.floor(recipe.rating);
-			const hasHalfStar = recipe.rating % 1 >= 0.5;
-			const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    // Resten av koden förblir densamma...
+    let starsHtml = '';
+    for (let i = 0; i < fullStars; i++) starsHtml += '<i class="fas fa-star"></i>';
+    if (hasHalfStar) starsHtml += '<i class="fas fa-star-half-alt"></i>';
+    for (let i = 0; i < emptyStars; i++) starsHtml += '<i class="far fa-star"></i>';
 
-			let starsHtml = '';
-			for (let i = 0; i < fullStars; i++) starsHtml += '<i class="fas fa-star"></i>';
-			if (hasHalfStar) starsHtml += '<i class="fas fa-star-half-alt"></i>';
-			for (let i = 0; i < emptyStars; i++) starsHtml += '<i class="far fa-star"></i>';
-
-			recipeElement.innerHTML = `
+    recipeElement.innerHTML = `
         <img src="${recipe.image}" alt="${recipe.translatedName || recipe.name}" class="recipe-preview" onerror="this.src='FoodPictures/_DefaultImage.png'" />
         <div class="recipe-title">
             <h3>${recipe.translatedName || recipe.name}</h3>
@@ -671,17 +668,17 @@ document.getElementById("languageSelect").addEventListener("change", async funct
                 <h4>Ingredients</h4>
                 <ul>
                     ${recipe.ingredients.map(ing =>
-				typeof ing === 'string'
-					? `<li>${ing}</li>`
-					: `<li class="ingredient">${ing.amount} ${ing.unit} ${ing.thing}</li>`
-			).join('')}
-			<h4>Instructions</h4>
-			<p class="recipe-instructions">${formattedDescription}</p>
+                        typeof ing === 'string'
+                            ? `<li>${ing}</li>`
+                            : `<li class="ingredient">${ing.amount} ${ing.unit} ${ing.thing}</li>`
+                    ).join('')}
                 </ul>
+                <h4>Instructions</h4>
+                <p class="recipe-instructions">${formattedInstructions}</p>
             </div>
         </div>
     `;
-		}
+}
 
 		function RemoveExstraInfo() {
 			let exstraInfo = document.getElementsByClassName("recipe-details");
